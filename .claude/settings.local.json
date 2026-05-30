@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(node -e ' *)",
+      "Bash(New-Item -ItemType Directory -Force -Path \"C:/Users/CHIARA/Documents/TimeMap/app/public/audio\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Output \"Created public/audio/\")",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\CHIARA\\\\Documents\\\\TimeMap\\\\app\\\\src\\\\data\\\\historicalData.js\" | Measure-Object -Line\\).Lines)"
+    ]
+  }
+}
