@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import WorldMap   from './components/WorldMap';
 import Timeline   from './components/Timeline';
 import SidePanel  from './components/SidePanel';
@@ -9,7 +9,48 @@ import { CITIES, REGIONS, CITY_REGION, getEraForYear } from './data/historicalDa
 
 const MAX_ITEMS = 4;
 
+function useMobileDetect() {
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 768);
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)');
+    const handler = (e) => setIsMobile(e.matches);
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
+  return isMobile;
+}
+
+function MobileScreen() {
+  return (
+    <div className="mobile-screen">
+      <div className="mobile-screen__content">
+        <div className="mobile-screen__icon" aria-hidden="true">
+          <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="32" cy="32" r="28" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5"/>
+            <circle cx="32" cy="32" r="2.5" fill="white"/>
+            <line x1="32" y1="4"  x2="32" y2="60" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
+            <line x1="4"  y1="32" x2="60" y2="32" stroke="rgba(255,255,255,0.3)" strokeWidth="1"/>
+            <polygon points="32,10 35,22 32,20 29,22" fill="white"/>
+            <text x="32" y="56" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="7" fontFamily="serif" letterSpacing="1">S</text>
+            <text x="32" y="13" textAnchor="middle" fill="white" fontSize="7" fontFamily="serif" letterSpacing="1" fontWeight="bold">N</text>
+            <text x="57" y="34" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="7" fontFamily="serif" letterSpacing="1">E</text>
+            <text x="7"  y="34" textAnchor="middle" fill="rgba(255,255,255,0.7)" fontSize="7" fontFamily="serif" letterSpacing="1">W</text>
+          </svg>
+        </div>
+        <h1 className="mobile-screen__title">TimeMap</h1>
+        <p className="mobile-screen__message">
+          TimeMap is designed for desktop exploration.<br/>
+          Please open it on a laptop or desktop<br/>
+          for the full experience.
+        </p>
+      </div>
+    </div>
+  );
+}
+
 export default function App() {
+  const isMobile = useMobileDetect();
+
   const [currentYear,    setCurrentYear]    = useState(100);
   const [selectedCities, setSelectedCities] = useState(new Set());
   const [selectedSites,  setSelectedSites]  = useState(new Set());
@@ -83,6 +124,8 @@ export default function App() {
   }, []);
 
   const count = selectedCities.size + selectedSites.size;
+
+  if (isMobile) return <MobileScreen />;
 
   return (
     <div className="app">
